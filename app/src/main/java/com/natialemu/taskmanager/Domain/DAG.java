@@ -66,5 +66,11 @@ public class DAG implements Graph {
         return false;
     }
 
+    @Override
+    public boolean cycleExists(GraphVisitor visitor) {
+
+        return visitor.visit(this);
+    }
+
 
 }

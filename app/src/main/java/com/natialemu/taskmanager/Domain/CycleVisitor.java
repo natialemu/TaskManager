@@ -8,6 +8,6 @@ package com.natialemu.taskmanager.Domain;
 public class CycleVisitor implements GraphVisitor {
     @Override
     public boolean visit(DAG directedGraph) {
-        return false;
+        return false;//checks for cycle for the directed graph
     }
 }

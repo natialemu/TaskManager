@@ -12,4 +12,5 @@ public interface Graph {
     boolean removeEdge(Item source, Item target);
     boolean addItem(Item item);
     boolean addEdge(Item source, Item target);
+    public boolean cycleExists(GraphVisitor visitor);
 }
