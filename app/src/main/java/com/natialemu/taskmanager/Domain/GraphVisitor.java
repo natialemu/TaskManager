@@ -5,4 +5,6 @@ package com.natialemu.taskmanager.Domain;
  */
 
 public interface GraphVisitor {
+
+    boolean visit(DAG directedGraph);
 }

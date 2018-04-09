@@ -21,6 +21,14 @@ public class Item {
         this.creationDate = new Date(completitionDate);
 
     }
+    public Item(){
+        category="";
+        priority = 0;
+        notes = "";
+        anticipatedCompletionDate = new Date();
+        creationDate = new Date();
+
+    }
 
     public String getCategory() {
         return category;
@@ -60,5 +68,32 @@ public class Item {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+
+        Item item = (Item) o;
+
+        if (priority != item.priority) return false;
+        if (category != null ? !category.equals(item.category) : item.category != null)
+            return false;
+        if (notes != null ? !notes.equals(item.notes) : item.notes != null) return false;
+        if (anticipatedCompletionDate != null ? !anticipatedCompletionDate.equals(item.anticipatedCompletionDate) : item.anticipatedCompletionDate != null)
+            return false;
+        return creationDate != null ? creationDate.equals(item.creationDate) : item.creationDate == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = category != null ? category.hashCode() : 0;
+        result = 31 * result + priority;
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (anticipatedCompletionDate != null ? anticipatedCompletionDate.hashCode() : 0);
+        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        return result;
     }
 }
