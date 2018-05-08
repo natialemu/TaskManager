@@ -40,4 +40,8 @@ public class GraphNode {
     public void setParentTag(boolean parentTag) {
         this.parentTag = parentTag;
     }
+
+    public int getPriority(){
+        return item.getPriority();
+    }
 }
