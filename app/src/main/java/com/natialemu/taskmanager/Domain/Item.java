@@ -4,6 +4,12 @@ import java.util.Date;
 
 /**
  * Created by Nathnael on 4/8/2018.
+ * Future:a item can be in three states(priority may change along the way) --> Future plan
+ *
+ * 1. new
+ * 2. completed
+ * 3. revisited
+ *
  */
 
 public class Item {

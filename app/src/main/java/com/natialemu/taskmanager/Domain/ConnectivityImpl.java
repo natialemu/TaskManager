@@ -1,5 +1,6 @@
 package com.natialemu.taskmanager.Domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ConnectivityImpl implements Connectivity {
         goal is to perform reverse post order traversal
          */
 
-        return null;
+        return sortedElements;
     }
 
     private void postOrder(List<GraphNode> sortedElements, GraphNode source) {
@@ -67,6 +68,22 @@ public class ConnectivityImpl implements Connectivity {
 
     @Override
     public Map<GraphNode, List<GraphNode>> getSortedItemsPerForest() {
+
+
+        Map<GraphNode,List<GraphNode>> itemsPerForest = new HashMap<>();
+        for(GraphNode source: graph.getSources()){
+            if(!visited.contains(source)) {
+                forrestRoots.add(source);
+                List<GraphNode> sortedElements = new Stack<>();
+                postOrder(sortedElements, source);
+                itemsPerForest.put(source,sortedElements);
+            }
+
+
+        }
+
+        return itemsPerForest;
+
 
     }
 }
