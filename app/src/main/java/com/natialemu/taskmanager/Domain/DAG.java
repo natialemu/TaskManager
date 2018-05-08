@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  * Created by Nathnael on 4/8/2018.
+ *
+ * Manage how when you have forrests, they're completely unrelated things so they can be done concurrently
  */
 
 public class DAG implements Graph {
