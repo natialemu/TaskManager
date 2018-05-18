@@ -33,7 +33,7 @@ public class TaskManagerFactory {
      */
 
     public boolean createDependency(Item parentItem, Item childItem){
-        return taskGraph.addEdge(parentItem,childItem);
+        return connectivity.addEdge(parentItem,childItem);
     }
 
     public boolean addTask(Item item){
@@ -45,7 +45,7 @@ public class TaskManagerFactory {
     }
 
     public boolean removeDependency(Item parentItem, Item childItem){
-        return taskGraph.removeEdge(parentItem,childItem);
+        return connectivity.removeEdge(parentItem,childItem);
     }
 
     public List<Item> getOptimalOrderOfTasks(){

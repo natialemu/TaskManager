@@ -3,7 +3,6 @@ package com.natialemu.taskmanager.Domain;
 import com.natialemu.taskmanager.ForestObserver;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,71 +26,6 @@ public class DAG implements Graph {
     public DAG(){
         adjMatrix = new HashMap<>();
         forests = new HashMap<>();
-    }
-
-    /*
-    Returns the forest observer of this node
-     */
-    public ForestObserver find(GraphNode node){//path compression
-        //TODO: to be implemented
-
-    }
-
-    public boolean union(GraphNode sourceNode, GraphNode targetNode){
-
-        ForestObserver sourceObserver = find(sourceNode);
-        ForestObserver targetObserver = find(targetNode);
-
-        if(!targetNode.isParentTag()){//no parent
-            assert (forests.get(targetObserver).contains(targetNode));
-            forests.get(targetObserver).remove(targetNode);
-            return merge(sourceObserver,targetObserver);
-
-        }
-
-        forests.get(targetObserver).remove(targetNode);
-        return merge(sourceObserver,targetObserver);
-
-        /*
-        Options:
-
-        1. both are not sources || only sourceNode is a source:
-           -->add all sources of smaller forest observer to that of the bigger one
-           --> remove small forest observer from map
-        2. targetNode is a source:
-
-           remove targetNode from targetObserver first
-           perform step 1
-
-
-
-         */
-
-    }
-
-    public boolean splitGraph(){
-        //TODO: to be implemented
-
-    }
-
-    private boolean merge(ForestObserver sourceObserver, ForestObserver targetObserver) {
-        if(forests.get(sourceObserver).size() < forests.get(targetObserver).size()){
-            moveSources(sourceObserver,targetObserver);
-            forests.remove(sourceObserver);
-
-        }else{
-            moveSources(targetObserver,sourceObserver);
-            forests.remove(targetObserver);
-
-        }
-        return true;
-    }
-
-    private void moveSources(ForestObserver from, ForestObserver to) {
-        for(GraphNode source : forests.get(from)){
-            forests.get(to).add(source);
-        }
-
     }
 
     @Override
@@ -145,7 +79,10 @@ public class DAG implements Graph {
             }
 
 
-            ForestObserver fo =find(itemNode);
+            ForestObserver fo = getSourceObserver(itemNode);
+
+            assert (fo != null);
+
             Set<GraphNode> neighbors = adjMatrix.get(itemNode);
             forests.get(fo).remove(itemNode);
 
@@ -164,6 +101,16 @@ public class DAG implements Graph {
         return false;
     }
 
+    private ForestObserver getSourceObserver(GraphNode itemNode) {
+        for(ForestObserver forestObserver: forests.keySet()){
+            if(forests.get(forestObserver).contains(itemNode)){
+                return forestObserver;
+            }
+        }
+
+        return null;
+    }
+
     private void setNodesAsSources(Set<GraphNode> itemChildren) {
         Iterator<GraphNode> nodeIterator = itemChildren.iterator();
 
@@ -171,47 +118,6 @@ public class DAG implements Graph {
             GraphNode nd = nodeIterator.next();
             nd.setParentTag(false);
         }
-    }
-
-    @Override
-    public boolean removeEdge(Item source, Item target) {
-
-        GraphNode sourceNode = buildGraphNode(source);
-        GraphNode targetNode = buildGraphNode(source);
-
-
-        if(adjMatrix.containsKey(sourceNode) && adjMatrix.get(sourceNode).contains(targetNode)){
-
-            adjMatrix.get(sourceNode).remove(targetNode);
-            boolean newForest = verifyPotentialSource(adjMatrix.get(sourceNode), targetNode);//through DFS
-            if(newForest){
-                //Call the split graph method
-                ForestObserver currentObserver = find(sourceNode);
-                ForestObserver newObserver = new ForestObserver();
-                Set<GraphNode> s = new HashSet<>();
-                s.add(targetNode);
-
-                //some sources from current observer might transfer over to new observer
-                removeSourcesFromCurrentObserver(currentObserver,targetNode)//Through DFS
-                forests.put(newObserver,s);
-            }
-            return true;
-
-        }
-
-
-        /**
-         * 1. Target could be a source
-         * 2. How to efficienty tell if a graph rooted at target is a forest?
-         *     potential new sources are all the children of source so
-         *       1. perform dfs from target marking everything
-         *       2. then perform dfs from the remaining potential sources,
-         *           - if the process does not visit an already explored node, then we have a new forest
-         *
-         *
-         */
-
-        return false;
     }
 
     @Override
@@ -228,37 +134,6 @@ public class DAG implements Graph {
         return true;
     }
 
-    @Override
-    public boolean addEdge(Item source, Item target) {
-        /**
-         * for each source:
-         *     find the node with the source
-         *       add the edge, provided no cycles! return false if cycles result
-         * for each source:
-         *     if you find the target:
-         *           keep track of the corresponding source
-         *           remove the source from the sources list
-         *
-         */
-        GraphNode sourceNode = buildGraphNode(source);
-        GraphNode targetNode = buildGraphNode(target);
-        if(adjMatrix.containsKey(sourceNode)){
-
-            Set<GraphNode> neighbors = adjMatrix.get(sourceNode);
-            neighbors.add(targetNode);
-            adjMatrix.put(sourceNode,neighbors);
-
-        }else{
-            Set<GraphNode> neighbors = new HashSet<>();
-            neighbors.add(targetNode);
-            adjMatrix.put(sourceNode,neighbors);
-
-        }
-
-
-        union(sourceNode,targetNode);
-        return true;
-    }
 
     private GraphNode buildGraphNode(Item item){
         GraphNode newNode = new GraphNode();
@@ -273,10 +148,9 @@ public class DAG implements Graph {
     }
 
     @Override
-    public List<GraphNode> adj(GraphNode source) {
-        List<GraphNode> sourceNeighbors = new ArrayList<>();
-        sourceNeighbors.addAll(adjMatrix.get(source));
-        return sourceNeighbors;
+    public Set<GraphNode> adj(GraphNode source) {
+
+        return adjMatrix.get(source);
     }
 
     @Override
@@ -291,6 +165,83 @@ public class DAG implements Graph {
         }
 
         return sources;
+    }
+
+    @Override
+    public Set<GraphNode> getForestSources(ForestObserver targetObserver) {
+        return forests.get(targetObserver);
+    }
+
+    @Override
+    public void removeSources(ForestObserver targetObserver) {
+        forests.remove(targetObserver);
+    }
+
+    @Override
+    public void addNewObserver(ForestObserver newObserver, Set<GraphNode> s) {
+        forests.put(newObserver,s);
+    }
+
+    @Override
+    public boolean containsNode(GraphNode sourceNode) {
+        return adjMatrix.containsKey(sourceNode);
+    }
+
+    @Override
+    public void addEdge(GraphNode sourceNode, Set<GraphNode> neighbors) {
+        adjMatrix.put(sourceNode,neighbors);
+    }
+
+    @Override
+    public void removeEdge(GraphNode source, GraphNode destination, ForestObserver currentObserver) {
+        assert adjMatrix.containsKey(source);
+        adjMatrix.get(source).remove(destination);
+
+        destination.setParentTag(false);
+        for(GraphNode key: adjMatrix.keySet()){
+            if(adjMatrix.get(key).contains(destination)){
+                destination.setParentTag(true);
+            }
+        }
+
+        if(!destination.isParentTag()){
+
+            forests.get(currentObserver).add(destination);
+
+        }
+
+    }
+
+    @Override
+    public Set<GraphNode> getParents(GraphNode sourceNode) {
+        Set<GraphNode> sourceParents = new HashSet<>();
+        for(GraphNode key: adjMatrix.keySet()){
+            if(adjMatrix.get(key).contains(sourceNode)){
+                sourceParents.add(key);
+            }
+        }
+
+        return sourceParents;
+    }
+
+    @Override
+    public int getNumberOfForests() {
+        return forests.size();
+    }
+
+    @Override
+    public Set<GraphNode> vertices() {
+        return adjMatrix.keySet();
+    }
+
+    @Override
+    public void removeSourceFromObserver(ForestObserver currentObserver, GraphNode targetNode) {
+        forests.get(currentObserver).remove(targetNode);
+    }
+
+    @Override
+    public void addSourceToObserver(ForestObserver newObserver, GraphNode source) {
+        forests.get(newObserver).add(source);
     }
 
 
