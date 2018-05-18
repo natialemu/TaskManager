@@ -34,10 +34,7 @@ public class CycleVisitor implements GraphVisitor {
             }
         }
         return true;
-        /*
-        for every source within the graph:
-             deligate to a private method to check
-         */
+
     }
 
     private boolean cycleExists(GraphNode source, DAG directedGraph){
@@ -68,7 +65,7 @@ public class CycleVisitor implements GraphVisitor {
          *
          * { [ } ]
          */
-        return (!poppedFromStack.get(adjNode) && !poppedFromStack.get(source) && pushedToStack.get(source) && pushedToStack.get(adjNode);
+        return !poppedFromStack.get(adjNode) && !poppedFromStack.get(source) && pushedToStack.get(source) && pushedToStack.get(adjNode);
 
 
     }
