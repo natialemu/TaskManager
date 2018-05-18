@@ -8,21 +8,20 @@ import java.util.List;
  */
 
 public class GraphNode {
-    List<GraphNode> neighbors;
-    Item item;
-    boolean parentTag;//indicates it has a parent
+
+    private Item item;
+    private boolean parentTag;//indicates it has a parent
 
     public GraphNode(){
-        neighbors = new ArrayList<>();
+
         item = new Item();
+        parentTag = false;
     }
 
-    public List<GraphNode> getNeighbors() {
-        return neighbors;
-    }
+    public GraphNode(Item item){
+        this.item = item;
+        parentTag = false;
 
-    public void setNeighbors(List<GraphNode> neighbors) {
-        this.neighbors = neighbors;
     }
 
     public Item getItem() {

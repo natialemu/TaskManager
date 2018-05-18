@@ -13,9 +13,19 @@ import java.util.Date;
  */
 
 public class Item {
+    private String itemID;
     private  String category;
     private int priority;
     private String notes;
+
+    public String getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
     private Date anticipatedCompletionDate;
     private Date creationDate;
 
