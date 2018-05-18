@@ -13,4 +13,8 @@ public interface Graph {
     boolean addItem(Item item);
     boolean addEdge(Item source, Item target);
     public boolean cycleExists(GraphVisitor visitor);
+
+    List<GraphNode> adj(GraphNode source);
+
+    List<GraphNode> getSources();
 }

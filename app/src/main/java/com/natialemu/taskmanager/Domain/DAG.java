@@ -1,7 +1,9 @@
 package com.natialemu.taskmanager.Domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nathnael on 4/8/2018.
@@ -10,35 +12,44 @@ import java.util.List;
  */
 
 public class DAG implements Graph {
-    List<GraphNode> sources;
+    Map<GraphNode, List<GraphNode>> adjMatrix;
 
     public DAG(){
-        sources = new ArrayList<>();
+        adjMatrix = new HashMap<>();
     }
 
     @Override
     public boolean removeItem(Item item) {
-        /**
-         * if item is a source:
-         *   remove it form sources list
-         *  otherwise:
-         *     check neighbor of every node for item and if found:
-         *           add an edge from parent of item to all its children, provided that they dont form cycles
-         *
-         *
-         */
+
+        GraphNode itemNode = buildGraphNode(item);
+
+        if(adjMatrix.containsKey(itemNode)){
+            adjMatrix.remove(itemNode);
+            for(GraphNode key: adjMatrix.keySet()){
+                if(adjMatrix.get(key).contains(itemNode)){
+                    adjMatrix.get(key).remove(itemNode);
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
 
     @Override
     public boolean removeEdge(Item source, Item target) {
-        /**
-         * for each source in sources:
-         *      if source item exists:
-         *          check its neighbor for target and remove it if it exists
-         *          if it doesnt exist return false
-         *
-         */
+
+        GraphNode sourceNode = buildGraphNode(source);
+        GraphNode targetNode = buildGraphNode(source);
+
+
+        if(adjMatrix.containsKey(sourceNode) && adjMatrix.get(sourceNode).contains(targetNode)){
+
+            adjMatrix.get(sourceNode).remove(targetNode);
+            return true;
+
+        }
+
         return false;
     }
 
@@ -47,9 +58,9 @@ public class DAG implements Graph {
         /**
          * add it as a source
          */
-        GraphNode newItem = new GraphNode();
-        newItem.setItem(item);
-        sources.add(newItem);
+        GraphNode newItem = buildGraphNode(item);
+        assert (!adjMatrix.containsKey(newItem));
+        adjMatrix.put(newItem,new ArrayList<GraphNode>());
         return true;
     }
 
@@ -65,13 +76,52 @@ public class DAG implements Graph {
          *           remove the source from the sources list
          *
          */
-        return false;
+        GraphNode sourceNode = buildGraphNode(source);
+        GraphNode targetNode = buildGraphNode(target);
+        if(adjMatrix.containsKey(sourceNode)){
+
+            List<GraphNode> neighbors = adjMatrix.get(sourceNode);
+            neighbors.add(targetNode);
+            adjMatrix.put(sourceNode,neighbors);
+
+        }else{
+            List<GraphNode> neighbors = new ArrayList<>();
+            neighbors.add(targetNode);
+            adjMatrix.put(sourceNode,neighbors);
+
+        }
+        return true;
+    }
+
+    private GraphNode buildGraphNode(Item item){
+        GraphNode newNode = new GraphNode();
+        newNode.setItem(item);
+        return newNode;
     }
 
     @Override
     public boolean cycleExists(GraphVisitor visitor) {
 
         return visitor.visit(this);
+    }
+
+    @Override
+    public List<GraphNode> adj(GraphNode source) {
+        return adjMatrix.get(source);
+    }
+
+    @Override
+    public List<GraphNode> getSources() {
+        List<GraphNode> sources = new ArrayList<>();
+        for(GraphNode node: adjMatrix.keySet()){
+            if(node.isParentTag()){
+
+                sources.add(node);
+
+            }
+        }
+
+        return sources;
     }
 
 
