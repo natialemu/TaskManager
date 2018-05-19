@@ -197,14 +197,14 @@ public class DAG implements Graph {
         assert adjMatrix.containsKey(source);
         adjMatrix.get(source).remove(destination);
 
-        destination.setParentTag(false);
+        destination.setParentTag(false);//assume target node is a source
         for(GraphNode key: adjMatrix.keySet()){
             if(adjMatrix.get(key).contains(destination)){
                 destination.setParentTag(true);
             }
         }
 
-        if(!destination.isParentTag()){
+        if(!destination.isParentTag()){//if target node is still a parent
 
             forests.get(currentObserver).add(destination);
 
