@@ -42,4 +42,8 @@ public interface Graph {
     void removeSourceFromObserver(ForestObserver currentObserver, GraphNode targetNode);
 
     void addSourceToObserver(ForestObserver newObserver, GraphNode source);
+
+    Set<ForestObserver> getObservers();
+
+
 }

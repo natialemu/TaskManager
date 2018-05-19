@@ -244,5 +244,10 @@ public class DAG implements Graph {
         forests.get(newObserver).add(source);
     }
 
+    @Override
+    public Set<ForestObserver> getObservers() {
+        return forests.keySet();
+    }
+
 
 }

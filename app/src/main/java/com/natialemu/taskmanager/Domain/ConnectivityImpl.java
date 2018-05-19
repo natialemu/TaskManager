@@ -2,6 +2,7 @@ package com.natialemu.taskmanager.Domain;
 
 import com.natialemu.taskmanager.ForestObserver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ConnectivityImpl implements Connectivity {
     private Graph graph;
     private Set<GraphNode> visited;
 
-    Map<GraphNode, GraphNode> forestIdentifiers;
+    private Map<GraphNode, GraphNode> forestIdentifiers;
     /*
 
     After edge removal, algorithm for determining the name of the new forest:
@@ -32,11 +33,12 @@ public class ConnectivityImpl implements Connectivity {
 
      */
 
-    private Set<GraphNode> forrestRoots;
+
 
     public ConnectivityImpl(Graph graph){
         this.graph = graph;
         visited = new HashSet<>();
+        forestIdentifiers = new HashMap<>();
     }
 
     public Graph getGraph() {
@@ -47,25 +49,34 @@ public class ConnectivityImpl implements Connectivity {
         this.graph = graph;
     }
 
+    /*
+    A random post order traversal --> topological sort
+     */
     @Override
     public List<GraphNode> getSortedItems() {
 
-        List<GraphNode> sortedElements = new Stack<>();
 
-        for(GraphNode source: graph.getSources()){
+
+       return getSortedItemPersource(new HashSet<GraphNode>(graph.getSources()));
+
+
+    }
+
+    private List<GraphNode> getSortedItemPersource(Set<GraphNode> sources){
+
+        List<GraphNode> sortedElements = new Stack<>();
+        for(GraphNode source: sources){
             if(!visited.contains(source)) {
-                forrestRoots.add(source);
+
+
                 postOrder(sortedElements, source);
+
             }
 
 
         }
-        /*
-
-        goal is to perform reverse post order traversal
-         */
-
         return sortedElements;
+
     }
 
     private void postOrder(List<GraphNode> sortedElements, GraphNode source) {
@@ -80,26 +91,27 @@ public class ConnectivityImpl implements Connectivity {
 
     @Override
     public List<List<GraphNode>> getAllCombinationsOfSortedItems() {
+        //TODO: to be implemented
         return null;
     }
 
     @Override
-    public Map<GraphNode, List<GraphNode>> getSortedItemsPerForest() {
+    public List<List<GraphNode>> getSortedItemsPerForest() {
 
 
-        Map<GraphNode,List<GraphNode>> itemsPerForest = new HashMap<>();
-        for(GraphNode source: graph.getSources()){
-            if(!visited.contains(source)) {
-                forrestRoots.add(source);
-                List<GraphNode> sortedElements = new Stack<>();
-                postOrder(sortedElements, source);
-                itemsPerForest.put(source,sortedElements);
-            }
+
+
+
+        List<List<GraphNode>>  topologicalSorts = new ArrayList<>();
+        for(ForestObserver fo : graph.getObservers()){
+
+            List<GraphNode> topologicalSortPerForest = getSortedItemPersource(graph.getForestSources(fo));
+            topologicalSorts.add(topologicalSortPerForest);
 
 
         }
 
-        return itemsPerForest;
+        return topologicalSorts;
 
 
     }

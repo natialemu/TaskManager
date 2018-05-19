@@ -14,7 +14,7 @@ public interface Connectivity {
     List<GraphNode> getSortedItems();//returns a topological sort for DAGs, or shortest path for undirected Graphs
     List<List<GraphNode>> getAllCombinationsOfSortedItems();//returns all possible topologically sorted paths or all paths for undirected Graphs
 
-    Map<GraphNode, List<GraphNode>> getSortedItemsPerForest();
+    List<List<GraphNode>> getSortedItemsPerForest();
     boolean removeEdge(Item source, Item target);
 
     boolean addEdge(Item source, Item target);
