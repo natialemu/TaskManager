@@ -3,6 +3,7 @@ package com.natialemu.taskmanager.Domain;
 import com.natialemu.taskmanager.ForestObserver;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,13 +57,13 @@ public class ConnectivityImpl implements Connectivity {
         for(GraphNode source: sources){
             if(!visited.contains(source)) {
 
-
                 postOrder(sortedElements, source);
 
             }
 
 
         }
+        Collections.reverse(sortedElements);
         return sortedElements;
 
     }
@@ -93,7 +94,7 @@ public class ConnectivityImpl implements Connectivity {
 
 
 
-        List<List<GraphNode>>  topologicalSorts = new ArrayList<>();
+        List<List<GraphNode>>  topologicalSorts = new ArrayList<>();//sorts per forest
         for(ForestObserver fo : graph.getObservers()){
 
             List<GraphNode> topologicalSortPerForest = getSortedItemPersource(graph.getForestSources(fo));
@@ -197,7 +198,10 @@ public class ConnectivityImpl implements Connectivity {
         ForestObserver sourceObserver = find(sourceNode);
         ForestObserver targetObserver = find(targetNode);
 
-        if(!targetNode.isParentTag()){//no parent
+        if(sourceObserver.equals(targetObserver)){
+            return true;
+        }
+        if(!targetNode.isParentTag()){//if target node used to be a source
             assert (graph.getForestSources(targetObserver).contains(targetNode));
             graph.getForestSources(targetObserver).remove(targetNode);
             return merge(sourceObserver,targetObserver);
