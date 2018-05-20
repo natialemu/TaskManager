@@ -122,6 +122,9 @@ public class ConnectivityImpl implements Connectivity {
 
 
         int numOfForests = new HashSet<>(forestIdentifiers.values()).size();
+
+        assert(Math.abs(numOfForests - graph.getNumberOfForests()) <= 1);
+
         if(numOfForests - 1 == graph.getNumberOfForests()){//a new forest is formed
 
             splitGraph(currentObserver, sourceNode,targetNode);
@@ -141,15 +144,18 @@ public class ConnectivityImpl implements Connectivity {
     }
 
     private void modifiedDFS(GraphNode current, GraphNode source) {
-        forestIdentifiers.put(current,source);
+        forestIdentifiers.put(current,source);// current is connected to source
         visited.add(current);
 
         for(GraphNode adjNode: graph.adj(current)){
             if(visited.contains(adjNode)){
                 source = forestIdentifiers.get(adjNode);
                 forestIdentifiers.put(current,source);
+            }else{
+                modifiedDFS(adjNode,source);
+
             }
-            modifiedDFS(adjNode,source);
+
         }
         forestIdentifiers.put(current,source);
     }
@@ -261,14 +267,17 @@ public class ConnectivityImpl implements Connectivity {
         modifiedDFS(targetNode,targetNode); // marks all nodes reachable from target node
         newVisited.addAll(visited); // add all reachable nodes from target node - aka in new forest
 
-
-        modifiedDFS(sourceNode,sourceNode);// mark source node which is in the old cluster
         oldVisisted.add(sourceNode);
 
         init(visited);
-        for(GraphNode s: potentialNewSources) {
+        visited.add(targetNode);
+
+        List<GraphNode> potentialSourcesList = new ArrayList<GraphNode>(potentialNewSources);
+        while(potentialSourcesList.size() != 0) {
+
+            GraphNode s = potentialSourcesList.get(0);
             if(!visited.contains(s))
-                modifiedDFS2(newObserver,currentObserver, s,s,new ArrayList<GraphNode>(potentialNewSources),oldVisisted,newVisited);
+                modifiedDFS2(newObserver,currentObserver, s,s,potentialSourcesList,oldVisisted,newVisited);
             init(visited);
 
 
