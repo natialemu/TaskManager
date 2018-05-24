@@ -1,7 +1,5 @@
 package com.natialemu.taskmanager.Domain;
 
-import com.natialemu.taskmanager.ForestObserver;
-
 import java.util.List;
 import java.util.Set;
 

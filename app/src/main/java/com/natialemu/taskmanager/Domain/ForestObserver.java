@@ -1,6 +1,5 @@
-package com.natialemu.taskmanager;
+package com.natialemu.taskmanager.Domain;
 
-import com.natialemu.taskmanager.Domain.GraphNode;
 import com.natialemu.taskmanager.Domain.Tools.IDGenerator;
 
 import java.util.Objects;
