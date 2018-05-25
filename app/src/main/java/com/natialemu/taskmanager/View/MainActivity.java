@@ -1,5 +1,10 @@
 package com.natialemu.taskmanager.View;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,7 +14,11 @@ import android.view.MenuItem;
 import com.natialemu.taskmanager.R;
 
 public class MainActivity extends AppCompatActivity {
+    private PagerAdapter mPagerAdapter;
 
+    private ViewPager mPager;
+
+    private static final int NUM_PAGES = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar appBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(appBar);
         //appBar.setLogo(R.drawable.L);
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+
 
 
         /**
@@ -58,5 +72,31 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this, "Create Text", Toast.LENGTH_LONG).show();
 //            }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        //TODO: implement this class
+
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            if(position == 1){
+                return new HighPriorityFragment();
+            }else if(position == 2){
+                return new ConcurrentTaskFragment();
+            }else if(position == 3){
+                return new AllTasksFragement();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
     }
 }
