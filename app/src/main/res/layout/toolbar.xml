@@ -8,6 +8,7 @@
     android:layout_height="64dp"
     android:layout_width="match_parent"
     android:background="@color/colorPrimaryDark"
-    android:elevation="100dp"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:elevation="4dp"
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     />
