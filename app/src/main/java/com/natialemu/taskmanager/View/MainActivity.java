@@ -6,10 +6,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -24,23 +27,33 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+    private ActionBarDrawerToggle mToggle;
+
     private static final int NUM_PAGES = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar appBar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar appBar = findViewById(R.id.toolbar);
         setSupportActionBar(appBar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        appBar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
-        appBar.setNavigationOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                //TODO
-            }
-        });
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
+
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+//        appBar.setNavigationOnClickListener(new View.OnClickListener(){
+////            @Override
+////            public void onClick(View view){
+////                //TODO
+////            }
+////        });
 
         //appBar.setLogo(R.drawable.L);
 
@@ -54,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         mPager.setAdapter(mPagerAdapter);
 
-        mDrawerLayout = findViewById(R.id.main_drawer_layout);
+
+
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
@@ -68,6 +82,30 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
 
 
 
@@ -89,19 +127,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
+        //getMenuInflater().inflate(R.menu.nav_drawer_menu,menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        if(mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
         switch (item.getItemId()){
-            case R.id.settings_item: Toast.makeText(this,"more settings will come",Toast.LENGTH_SHORT); return true;
-            case R.id.homeAsUp: mDrawerLayout.openDrawer(GravityCompat.START); return true;
+            case R.id.settings_item:
+                Toast.makeText(this,"more settings will come",Toast.LENGTH_SHORT).show();
+                return true;
+
             default: return super.onOptionsItemSelected(item);
 
         }
+
 
 //        int id = item.getItemId();
 //
@@ -117,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
 ////            }
 //        return super.onOptionsItemSelected(item);
     }
+
+
+
+
 
 
 

@@ -5,4 +5,6 @@
     <string name="hello_blank_fragment">Concurrent Fragment content</string>
     <string name="menu_name">Open menu</string>
     <string name="action_settings">Settings button</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

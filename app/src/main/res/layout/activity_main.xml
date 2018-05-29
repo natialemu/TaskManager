@@ -6,13 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/whiteBackground"
     tools:context="com.natialemu.taskmanager.View.MainActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar">
-    </include>
+
 
 
     <!--<android.support.v7.widget.CardView-->
@@ -30,21 +26,23 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/main_activity_content_frame"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar">
+        </include>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+
 
             <android.support.v4.view.ViewPager
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/pager"
+                android:layout_marginTop="64dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
 
-        </LinearLayout>
+
 
     </FrameLayout>
 
@@ -53,12 +51,14 @@
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/nav_drawer_menu"
-        app:headerLayout="@layout/nav_drawer_header"/>
+        app:headerLayout="@layout/nav_drawer_header">
+
+    </android.support.design.widget.NavigationView>
 
 
 
