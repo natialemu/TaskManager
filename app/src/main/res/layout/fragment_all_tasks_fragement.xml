@@ -31,6 +31,14 @@
 
        </android.support.v7.widget.CardView>
 
+       <Button
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="View more"
+           android:id="@+id/view_all_tasks">
+
+       </Button>
+
 
    </LinearLayout>
 
