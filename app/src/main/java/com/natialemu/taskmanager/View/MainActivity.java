@@ -3,7 +3,6 @@ package com.natialemu.taskmanager.View;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mPagerAdapter.addFragment(new HighPriorityFragment(),"High priority");
         mPagerAdapter.addFragment(new ConcurrentTaskFragment(),"Concurrent Tasks");
         mPagerAdapter.addFragment(new AllTasksFragement(), "All tasks");
+        mPagerAdapter.addFragment(new RecurringTaskFragment(),"Recurring tasks");
 
         mPager.setAdapter(mPagerAdapter);
 
