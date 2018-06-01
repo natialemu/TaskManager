@@ -172,6 +172,8 @@ public class ConnectivityImpl implements Connectivity {
          *           remove the source from the sources list
          *
          */
+        assert( (source.isReccuringTask() && target.isReccuringTask()) || (!source.isReccuringTask() && !target.isReccuringTask()) ) ;
+
         GraphNode sourceNode = buildGraphNode(source);
         GraphNode targetNode = buildGraphNode(target);
         targetNode.addParent(sourceNode);

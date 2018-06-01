@@ -6,9 +6,28 @@ import java.util.Objects;
 
 public final class ForestObserver extends GraphNode {
     private int observerID;
+    private boolean observingReccuringTasks;
+
+    public int getObserverID() {
+        return observerID;
+    }
+
+    public void setObserverID(int observerID) {
+        this.observerID = observerID;
+    }
+
+    public boolean isObservingReccuringTasks() {
+        return observingReccuringTasks;
+    }
+
+    public void setObservingReccuringTasks(boolean observingReccuringTasks) {
+        this.observingReccuringTasks = observingReccuringTasks;
+    }
+
     public ForestObserver(){
         super(null);
         observerID = IDGenerator.getNewID();
+
     }
 
     @Override
@@ -24,4 +43,6 @@ public final class ForestObserver extends GraphNode {
 
         return Objects.hash(observerID);
     }
+
+
 }

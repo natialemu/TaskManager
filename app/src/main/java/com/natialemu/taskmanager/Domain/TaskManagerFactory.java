@@ -64,4 +64,7 @@ public class TaskManagerFactory {
     public List<Item> getAllTasks(){
         return null;
     }
+
+    public List<Item> getAllReccuringTasks(){return null;}
+    public List<Item> getTopNReccuringTasks(int n){return null;}
 }

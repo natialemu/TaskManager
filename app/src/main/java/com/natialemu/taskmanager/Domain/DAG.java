@@ -138,7 +138,11 @@ public class DAG implements Graph {
         adjMatrix.put(newItem,new HashSet<GraphNode>());
         Set<GraphNode> newSource = new HashSet<>();
         newSource.add(newItem);
-        forests.put(new ForestObserver(),newSource);
+        ForestObserver newObserver = new ForestObserver();
+        if(item.isReccuringTask()){
+            newObserver.isObservingReccuringTasks();
+        }
+        forests.put(newObserver,newSource);
         return true;
     }
 

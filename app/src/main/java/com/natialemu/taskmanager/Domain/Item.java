@@ -17,6 +17,15 @@ public class Item {
     private  String category;
     private int priority;
     private String notes;
+    private boolean reccuringTask;
+
+    public boolean isReccuringTask() {
+        return reccuringTask;
+    }
+
+    public void setReccuringTask(boolean reccuringTask) {
+        this.reccuringTask = reccuringTask;
+    }
 
     public String getItemID() {
         return itemID;
