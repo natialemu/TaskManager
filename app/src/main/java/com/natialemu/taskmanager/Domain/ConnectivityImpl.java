@@ -66,7 +66,7 @@ public class ConnectivityImpl implements Connectivity {
 
     }
 
-    private void postOrder(List<GraphNode> sortedElements, GraphNode source) {
+    public void postOrder(List<GraphNode> sortedElements, GraphNode source) {
 
 
         for(GraphNode adjNode: graph.adj(source)){
@@ -142,7 +142,7 @@ public class ConnectivityImpl implements Connectivity {
         }
     }
 
-    private void modifiedDFS(GraphNode current, GraphNode source) {
+    public void modifiedDFS(GraphNode current, GraphNode source) {
         forestIdentifiers.put(current,source);// current is connected to source
         visited.add(current);
 
