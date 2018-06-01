@@ -1,6 +1,7 @@
 package com.natialemu.taskmanager.Domain;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,17 +11,18 @@ import java.util.List;
 public class GraphNode {
 
     private Item item;
-    private boolean parentTag;//indicates it has a parent
+    List<GraphNode> parents;
 
     public GraphNode(){
 
         item = new Item();
-        parentTag = false;
+        parents = new ArrayList<>();
     }
 
     public GraphNode(Item item){
         this.item = item;
-        parentTag = false;
+        parents = new ArrayList<>();
+
 
     }
 
@@ -32,15 +34,32 @@ public class GraphNode {
         this.item = item;
     }
 
-    public boolean isParentTag() {
-        return parentTag;
-    }
-
-    public void setParentTag(boolean parentTag) {
-        this.parentTag = parentTag;
+    public boolean hasParent() {
+        return parents.size() != 0;
     }
 
     public int getPriority(){
         return item.getPriority();
+    }
+
+    public boolean isMyParent(GraphNode graphNode){return parents.contains(graphNode);}
+    public List<GraphNode> getParents(){return parents; }
+    public void addParent(GraphNode graphNode){
+        parents.add(graphNode);
+    }
+
+    public  void addParents(Collection<GraphNode> parents){
+        parents.addAll(parents);
+    }
+
+    public void removeParent(GraphNode graphNode){
+        parents.remove(graphNode);
+    }
+    public void removeAllParents(){
+        parents = new ArrayList<>();
+    }
+
+    public GraphNode getOneParent() {
+        return parents.get(0);
     }
 }

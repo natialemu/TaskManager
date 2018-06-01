@@ -159,6 +159,7 @@ public class ConnectivityImpl implements Connectivity {
         forestIdentifiers.put(current,source);
     }
 
+    //returns true if adding an edge is possible, false otherwise(in case of cycles)
     @Override
     public boolean addEdge(Item source, Item target) {
         /**
@@ -173,11 +174,14 @@ public class ConnectivityImpl implements Connectivity {
          */
         GraphNode sourceNode = buildGraphNode(source);
         GraphNode targetNode = buildGraphNode(target);
+        targetNode.addParent(sourceNode);
         if(graph.containsNode(sourceNode)){
 
             Set<GraphNode> neighbors = graph.adj(sourceNode);
             neighbors.add(targetNode);
             graph.addEdge(sourceNode,neighbors);
+
+
 
         }else{
             Set<GraphNode> neighbors = new HashSet<>();
@@ -188,6 +192,20 @@ public class ConnectivityImpl implements Connectivity {
 
 
         union(sourceNode,targetNode);
+
+        GraphVisitor visitor = new CycleVisitor();
+        if(graph.cycleExists(visitor)){
+            removeEdge(source,target);//undo change
+            return false;
+            /**
+             * In this case:
+             *    - return a message to the user that both tasks depend on one another and provide the following options:
+             *       show how they relate to one another and provide the following possible fixes:
+             *          1. do nothing
+             *          2. update dependencies
+             *
+             */
+        }
         return true;
     }
 
@@ -199,7 +217,7 @@ public class ConnectivityImpl implements Connectivity {
         if(sourceObserver.equals(targetObserver)){
             return true;
         }
-        if(!targetNode.isParentTag()){//if target node used to be a source
+        if(!targetNode.hasParent()){//if target node used to be a source
             assert (graph.getForestSources(targetObserver).contains(targetNode));
             graph.getForestSources(targetObserver).remove(targetNode);
             return merge(sourceObserver,targetObserver);
@@ -247,7 +265,10 @@ public class ConnectivityImpl implements Connectivity {
 
     @Override
     public ForestObserver find(GraphNode node) {
-        return null;
+        if(!node.hasParent()){
+            return graph.getObserverForSource(node);
+        }
+        return find(node.getOneParent());
     }
 
     private boolean splitGraph(ForestObserver currentObserver, GraphNode sourceNode, GraphNode targetNode){

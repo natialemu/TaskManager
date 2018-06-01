@@ -43,5 +43,7 @@ public interface Graph {
 
     Set<ForestObserver> getObservers();
 
+    ForestObserver getObserverForSource(GraphNode source);
+
 
 }

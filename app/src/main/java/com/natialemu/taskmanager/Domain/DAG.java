@@ -29,8 +29,11 @@ public class DAG implements Graph {
     @Override
     public boolean removeItem(Item item) {
 
+
+
         GraphNode itemNode = buildGraphNode(item);
         Set<GraphNode> itemChildren = adjMatrix.get(itemNode);
+        removeParentFromChildren(itemNode);
 
         if(adjMatrix.containsKey(itemNode)){
 
@@ -61,7 +64,7 @@ public class DAG implements Graph {
 
         }
 
-        if(!itemNode.isParentTag()){//is a source
+        if(!itemNode.hasParent()){//is a source
 
             //sef parent flag
             setNodesAsSources(itemChildren);
@@ -70,7 +73,7 @@ public class DAG implements Graph {
 
                 for(GraphNode child: itemChildren){
                     if(adjMatrix.get(key).contains(child)){
-                        child.setParentTag(true);
+                        child.addParent(key);
                     }
                 }
 
@@ -86,7 +89,7 @@ public class DAG implements Graph {
 
 
             for(GraphNode nd : neighbors){
-                if(!nd.isParentTag()){
+                if(!nd.hasParent()){
                     forests.get(fo).add(nd);//new sources
                 }
 
@@ -97,6 +100,13 @@ public class DAG implements Graph {
             }
         }
         return false;
+    }
+
+    private void removeParentFromChildren(GraphNode itemNode) {
+        for(GraphNode gn: adjMatrix.get(itemNode)){
+            assert (gn.isMyParent(itemNode));
+            gn.removeParent(itemNode);
+        }
     }
 
     private ForestObserver getSourceObserver(GraphNode itemNode) {
@@ -114,7 +124,7 @@ public class DAG implements Graph {
 
         while (nodeIterator.hasNext()){
             GraphNode nd = nodeIterator.next();
-            nd.setParentTag(false);
+            nd.removeAllParents();
         }
     }
 
@@ -155,7 +165,7 @@ public class DAG implements Graph {
     public List<GraphNode> getSources() {
         List<GraphNode> sources = new ArrayList<>();
         for(GraphNode node: adjMatrix.keySet()){
-            if(node.isParentTag()){
+            if(node.hasParent()){
 
                 sources.add(node);
 
@@ -195,14 +205,14 @@ public class DAG implements Graph {
         assert adjMatrix.containsKey(source);
         adjMatrix.get(source).remove(destination);
 
-        destination.setParentTag(false);//assume target node is a source
+        destination.removeAllParents();//assume target node is a source
         for(GraphNode key: adjMatrix.keySet()){
             if(adjMatrix.get(key).contains(destination)){
-                destination.setParentTag(true);
+                destination.addParent(key);
             }
         }
 
-        if(!destination.isParentTag()){//if target node is still a parent
+        if(!destination.hasParent()){//if target node is still a parent
 
             forests.get(currentObserver).add(destination);
 
@@ -212,14 +222,9 @@ public class DAG implements Graph {
 
     @Override
     public Set<GraphNode> getParents(GraphNode sourceNode) {
-        Set<GraphNode> sourceParents = new HashSet<>();
-        for(GraphNode key: adjMatrix.keySet()){
-            if(adjMatrix.get(key).contains(sourceNode)){
-                sourceParents.add(key);
-            }
-        }
 
-        return sourceParents;
+
+        return new HashSet<>(sourceNode.getParents());
     }
 
     @Override
@@ -245,6 +250,17 @@ public class DAG implements Graph {
     @Override
     public Set<ForestObserver> getObservers() {
         return forests.keySet();
+    }
+
+    @Override
+    public ForestObserver getObserverForSource(GraphNode source) {
+        assert (!source.hasParent());
+        for(ForestObserver fo: forests.keySet()){
+            if(forests.get(fo).contains(source)){
+                return fo;
+            }
+        }
+        return null;
     }
 
 
