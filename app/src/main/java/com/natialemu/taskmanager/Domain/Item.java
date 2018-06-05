@@ -18,6 +18,7 @@ public class Item {
     private int priority;
     private String notes;
     private boolean reccuringTask;
+    private String tag;
 
     public boolean isReccuringTask() {
         return reccuringTask;
