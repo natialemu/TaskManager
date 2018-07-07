@@ -3,6 +3,7 @@ package com.natialemu.taskmanager.View;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.natialemu.taskmanager.R;
@@ -27,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mToggle;
 
+
+
     private static final int NUM_PAGES = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Toolbar appBar = findViewById(R.id.toolbar);
         setSupportActionBar(appBar);
@@ -46,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);//check if this is needed
+
 //        appBar.setNavigationOnClickListener(new View.OnClickListener(){
 ////            @Override
 ////            public void onClick(View view){
@@ -65,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
         mPagerAdapter.addFragment(new RecurringTaskFragment(),"Recurring tasks");
 
         mPager.setAdapter(mPagerAdapter);
+
+        TabLayout mtabLayout = findViewById(R.id.tab_layout);
+        mtabLayout.setupWithViewPager(mPager);
+
+
+
 
 
 
@@ -105,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
 
 
 

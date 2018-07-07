@@ -3,7 +3,13 @@ package com.natialemu.taskmanager.DataAccess;
 public class ItemDAO {
     /**
      *
-     * Filename: item
+     * Aurora DB:
+     * Username: nathnael2
+     Password: NatMysql_AWS_19
+
+     Database port: 3306
+     DB Name: TaskManagerAndroid
+     *
      *
      * behaviors:
      * 1. open file
