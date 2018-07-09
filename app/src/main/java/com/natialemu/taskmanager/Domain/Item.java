@@ -13,11 +13,32 @@ import java.util.Date;
  */
 
 public class Item {
+
     private String itemID;
     private  String category;
     private int priority;
     private String notes;
     private boolean reccuringTask;
+    private String tag;
+    private String title;
+    private Date anticipatedCompletionDate;
+    private Date creationDate;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public boolean isReccuringTask() {
         return reccuringTask;
@@ -35,10 +56,8 @@ public class Item {
         this.itemID = itemID;
     }
 
-    private Date anticipatedCompletionDate;
-    private Date creationDate;
-
     public Item(String category, int priority, String notes, String completitionDate, String creationDate){
+
         this.category = category;
         this.priority = priority;
         this.notes = notes;
@@ -47,6 +66,7 @@ public class Item {
 
     }
     public Item(){
+
         category="";
         priority = 0;
         notes = "";
@@ -121,4 +141,5 @@ public class Item {
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         return result;
     }
+
 }
