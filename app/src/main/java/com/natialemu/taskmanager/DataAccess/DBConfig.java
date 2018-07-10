@@ -6,6 +6,13 @@ public class DBConfig {
     private String databaseURL;
     private String databaseName;
 
+    public DBConfig(){
+        username = "nathnael2";
+        password = "NatMysql_AWS_19";
+        databaseURL = "nati-db-instances.cedako7zoc64.us-west-2.rds.amazonaws.com:3306";
+        databaseName = "TaskManagerAndroid";
+    }
+
     public String getUsername() {
         return username;
     }
