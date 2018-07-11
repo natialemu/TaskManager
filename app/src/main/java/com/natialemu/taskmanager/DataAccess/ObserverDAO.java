@@ -16,6 +16,7 @@ public class ObserverDAO {
 
     public List<ForestObserver> getAllObservers(){
         Connection connection = DBConnect.getDatabaseConnection();
+        return null;
 
 
 
@@ -24,7 +25,7 @@ public class ObserverDAO {
     public List<GraphNode> geSourcesObservedBy(int observer_id){
         Connection connection = DBConnect.getDatabaseConnection();
 
-
+        return null;
 
     }
 }
